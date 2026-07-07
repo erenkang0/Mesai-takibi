@@ -19,6 +19,7 @@ object Routes {
     const val TAX = "tax"
     const val HOLIDAYS = "holidays"
     const val BACKUP = "backup"
+    const val SEVERANCE = "severance"
 }
 
 /** Alt gezinme çubuğundaki sekmeler. */
