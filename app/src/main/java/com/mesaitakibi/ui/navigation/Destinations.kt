@@ -20,6 +20,7 @@ object Routes {
     const val HOLIDAYS = "holidays"
     const val BACKUP = "backup"
     const val SEVERANCE = "severance"
+    const val LEAVE = "leave"
 }
 
 /** Alt gezinme çubuğundaki sekmeler. */

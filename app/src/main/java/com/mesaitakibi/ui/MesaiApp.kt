@@ -26,6 +26,7 @@ import com.mesaitakibi.ui.screens.backup.BackupScreen
 import com.mesaitakibi.ui.screens.dashboard.DashboardScreen
 import com.mesaitakibi.ui.screens.finance.FinanceScreen
 import com.mesaitakibi.ui.screens.holidays.HolidaysScreen
+import com.mesaitakibi.ui.screens.leave.LeaveScreen
 import com.mesaitakibi.ui.screens.onboarding.OnboardingScreen
 import com.mesaitakibi.ui.screens.payroll.PayrollScreen
 import com.mesaitakibi.ui.screens.settings.SettingsScreen
@@ -112,6 +113,7 @@ private fun MainScaffold() {
             composable(Routes.HOLIDAYS) { HolidaysScreen(onBack = { navController.popBackStack() }) }
             composable(Routes.BACKUP) { BackupScreen(onBack = { navController.popBackStack() }) }
             composable(Routes.SEVERANCE) { SeveranceScreen(onBack = { navController.popBackStack() }) }
+            composable(Routes.LEAVE) { LeaveScreen(onBack = { navController.popBackStack() }) }
         }
     }
 }

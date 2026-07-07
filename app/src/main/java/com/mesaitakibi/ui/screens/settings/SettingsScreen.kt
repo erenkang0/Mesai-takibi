@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Backup
+import androidx.compose.material.icons.filled.BeachAccess
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Receipt
@@ -87,6 +88,7 @@ fun SettingsScreen(
             NavRow("Vardiya / Plan", Icons.Filled.Schedule) { onNavigate(Routes.SHIFTS) }
             NavRow("Vergi ve SGK Parametreleri", Icons.Filled.Receipt) { onNavigate(Routes.TAX) }
             NavRow("Kıdem & İhbar Tazminatı", Icons.Filled.Calculate) { onNavigate(Routes.SEVERANCE) }
+            NavRow("Yıllık İzin", Icons.Filled.BeachAccess) { onNavigate(Routes.LEAVE) }
             NavRow("Resmî Tatiller", Icons.Filled.CalendarMonth) { onNavigate(Routes.HOLIDAYS) }
             NavRow("Yedekleme ve Veri", Icons.Filled.Backup) { onNavigate(Routes.BACKUP) }
         }

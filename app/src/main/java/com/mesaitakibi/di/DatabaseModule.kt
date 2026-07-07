@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.mesaitakibi.data.local.MesaiDatabase
 import com.mesaitakibi.data.local.dao.HolidayDao
+import com.mesaitakibi.data.local.dao.LeaveDao
 import com.mesaitakibi.data.local.dao.PayrollPeriodDao
 import com.mesaitakibi.data.local.dao.SettingsDao
 import com.mesaitakibi.data.local.dao.ShiftDao
@@ -35,4 +36,5 @@ object DatabaseModule {
     @Provides fun payrollDao(db: MesaiDatabase): PayrollPeriodDao = db.payrollPeriodDao()
     @Provides fun transactionDao(db: MesaiDatabase): TransactionDao = db.transactionDao()
     @Provides fun settingsDao(db: MesaiDatabase): SettingsDao = db.settingsDao()
+    @Provides fun leaveDao(db: MesaiDatabase): LeaveDao = db.leaveDao()
 }
