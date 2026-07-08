@@ -72,6 +72,20 @@ class TimeTrackingRepository @Inject constructor(
         return detector.analyzeWeek(weekStart, sessions, profile, plannedShifts, holidays)
     }
 
+    /** Yıl boyunca kümülatif fazla çalışma (mesai) saati — yıllık 270 saat sınırı takibi için. */
+    suspend fun annualOvertimeHours(year: Int): Double {
+        var minutes = 0L
+        var week = LocalDate.of(year, 1, 1).with(DayOfWeek.MONDAY)
+        val yearEnd = LocalDate.of(year, 12, 31)
+        while (!week.isAfter(yearEnd)) {
+            if (week.year == year || week.plusDays(6).year == year) {
+                minutes += analyzeWeek(week).fazlaCalismaMinutes
+            }
+            week = week.plusDays(7)
+        }
+        return minutes / 60.0
+    }
+
     companion object {
         /** Verilen tarihi içeren ISO haftasının Pazartesi'si. */
         fun weekStartOf(date: LocalDate): LocalDate = date.with(DayOfWeek.MONDAY)

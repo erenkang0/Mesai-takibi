@@ -17,7 +17,7 @@ enum class ThemeMode { SYSTEM, LIGHT, DARK }
 
 data class AppPreferences(
     val themeMode: ThemeMode = ThemeMode.DARK,
-    val dynamicColor: Boolean = true,
+    val dynamicColor: Boolean = false,
     val hapticsEnabled: Boolean = true,
     val onboarded: Boolean = false,
     val leaveServiceYears: Int = 1,
@@ -43,7 +43,7 @@ class PreferencesRepository @Inject constructor(
         AppPreferences(
             themeMode = prefs[Keys.THEME]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() }
                 ?: ThemeMode.DARK,
-            dynamicColor = prefs[Keys.DYNAMIC] ?: true,
+            dynamicColor = prefs[Keys.DYNAMIC] ?: false,
             hapticsEnabled = prefs[Keys.HAPTICS] ?: true,
             onboarded = prefs[Keys.ONBOARDED] ?: false,
             leaveServiceYears = prefs[Keys.LEAVE_SERVICE_YEARS] ?: 1,

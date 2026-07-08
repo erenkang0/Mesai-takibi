@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.mesaitakibi.data.repository.PayrollRepository
 import com.mesaitakibi.data.repository.SettingsRepository
 import com.mesaitakibi.data.repository.TimeTrackingRepository
+import com.mesaitakibi.domain.overtime.AnnualOvertimeStatus
+import com.mesaitakibi.domain.overtime.AnnualOvertimeTracker
 import com.mesaitakibi.domain.overtime.WeeklyWorkResult
 import com.mesaitakibi.notification.WorkSessionController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +29,7 @@ data class DashboardUiState(
     val clockInSince: LocalDateTime? = null,
     val weekly: WeeklyWorkResult? = null,
     val estimatedNet: BigDecimal? = null,
+    val annualOvertime: AnnualOvertimeStatus? = null,
     val userName: String = ""
 )
 
@@ -48,6 +51,9 @@ class DashboardViewModel @Inject constructor(
                 val net = runCatching {
                     payroll.computeMonth(today.year, today.monthValue).net
                 }.getOrNull()
+                val annual = AnnualOvertimeTracker.status(
+                    runCatching { timeTracking.annualOvertimeHours(today.year) }.getOrDefault(0.0)
+                )
                 val profile = settings.getProfile()
                 DashboardUiState(
                     loading = false,
@@ -55,6 +61,7 @@ class DashboardViewModel @Inject constructor(
                     clockInSince = open?.clockIn,
                     weekly = weekly,
                     estimatedNet = net,
+                    annualOvertime = annual,
                     userName = profile.name
                 )
             }

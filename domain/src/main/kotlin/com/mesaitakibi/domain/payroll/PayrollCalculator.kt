@@ -28,6 +28,8 @@ data class PayrollResult(
     val incomeTax: BigDecimal,
     val stampTax: BigDecimal,
     val totalDeductions: BigDecimal,
+    val netAdditions: BigDecimal = BigDecimal.ZERO,
+    val netDeductions: BigDecimal = BigDecimal.ZERO,
     val net: BigDecimal
 )
 
@@ -46,7 +48,10 @@ class PayrollCalculator {
         work: MonthlyWork,
         profile: EmployeeProfile,
         tax: TaxParameters,
-        cumulativeIncomeTaxBaseBefore: BigDecimal? = null
+        cumulativeIncomeTaxBaseBefore: BigDecimal? = null,
+        additionalTaxableEarnings: BigDecimal = BigDecimal.ZERO,
+        netAdditions: BigDecimal = BigDecimal.ZERO,
+        netDeductions: BigDecimal = BigDecimal.ZERO
     ): PayrollResult {
         val hourly = profile.hourlyGross()
 
@@ -58,7 +63,8 @@ class PayrollCalculator {
         val fazlaCalismaPay = work.fazlaCalismaHours * hourly * BigDecimal("1.50")
         val holidayPay = work.holidayHours * hourly * BigDecimal("1.00") // resmî tatil ek %100
 
-        val gross = (base + fazlaSurePay + fazlaCalismaPay + holidayPay).setScale(scale, rm)
+        val gross = (base + fazlaSurePay + fazlaCalismaPay + holidayPay + additionalTaxableEarnings)
+            .setScale(scale, rm)
 
         // --- Yasal kesintiler ---
         val sgkBase = gross.min(tax.sgkCeiling)
@@ -91,7 +97,7 @@ class PayrollCalculator {
         }).setScale(scale, rm)
 
         val totalDeductions = (sgkEmployee + unemployment + incomeTax + stampTax).setScale(scale, rm)
-        val net = (gross - totalDeductions).setScale(scale, rm)
+        val net = (gross - totalDeductions + netAdditions - netDeductions).setScale(scale, rm)
 
         return PayrollResult(
             gross = gross,
@@ -104,6 +110,8 @@ class PayrollCalculator {
             incomeTax = incomeTax,
             stampTax = stampTax,
             totalDeductions = totalDeductions,
+            netAdditions = netAdditions.setScale(scale, rm),
+            netDeductions = netDeductions.setScale(scale, rm),
             net = net
         )
     }

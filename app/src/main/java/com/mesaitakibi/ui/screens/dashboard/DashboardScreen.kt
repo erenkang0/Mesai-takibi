@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -118,9 +119,59 @@ fun DashboardScreen(
                 .pressableClick(LocalAppHaptics.current, HapticEvent.CLICK) { onOpenPayroll() }
         )
 
+        val annual = state.annualOvertime
+        if (annual != null && annual.usedHours > 0.0) {
+            Spacer(Modifier.height(12.dp))
+            AnnualOvertimeCard(annual)
+        }
+
         if (weekly != null && weekly.hasOvertime) {
             Spacer(Modifier.height(12.dp))
             OvertimeBanner(weekly)
+        }
+    }
+}
+
+@Composable
+private fun AnnualOvertimeCard(status: com.mesaitakibi.domain.overtime.AnnualOvertimeStatus) {
+    val color = when (status.level) {
+        com.mesaitakibi.domain.overtime.OvertimeLevel.NORMAL -> MaterialTheme.colorScheme.primary
+        com.mesaitakibi.domain.overtime.OvertimeLevel.WARNING -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.error
+    }
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Text("Yıllık Fazla Mesai", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "%.1f sa / %d sa".format(status.usedHours, status.limitHours),
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = color
+            )
+            Spacer(Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = { status.ratio.coerceIn(0.0, 1.0).toFloat() },
+                color = color,
+                modifier = Modifier.fillMaxWidth()
+            )
+            val warn = when (status.level) {
+                com.mesaitakibi.domain.overtime.OvertimeLevel.WARNING ->
+                    "Yıllık 270 saat sınırının %75'ini geçtin."
+                com.mesaitakibi.domain.overtime.OvertimeLevel.CRITICAL ->
+                    "Dikkat: yıllık mesai sınırına çok yaklaştın (${"%.0f".format(status.remainingHours)} sa kaldı)."
+                com.mesaitakibi.domain.overtime.OvertimeLevel.EXCEEDED ->
+                    "Yasal yıllık 270 saat fazla çalışma sınırını aştın."
+                else -> null
+            }
+            if (warn != null) {
+                Spacer(Modifier.height(8.dp))
+                Text(warn, style = MaterialTheme.typography.bodySmall, color = color)
+            }
         }
     }
 }

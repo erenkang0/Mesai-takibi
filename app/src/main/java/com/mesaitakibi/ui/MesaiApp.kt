@@ -1,6 +1,7 @@
 package com.mesaitakibi.ui
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -63,7 +64,7 @@ private fun MainScaffold() {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
                 BottomTab.entries.forEach { tab ->
                     val selected = currentRoute?.hierarchy?.any { it.route == tab.route } == true
                     NavigationBarItem(
