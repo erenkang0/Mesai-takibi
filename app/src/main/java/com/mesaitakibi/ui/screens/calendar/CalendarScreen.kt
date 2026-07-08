@@ -1,6 +1,7 @@
 package com.mesaitakibi.ui.screens.calendar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -168,6 +169,4 @@ private fun DayCell(
 }
 
 private fun Modifier.androidxBorder(selected: Boolean, color: androidx.compose.ui.graphics.Color): Modifier =
-    if (selected) this.then(
-        androidx.compose.foundation.border(1.5.dp, color, RoundedCornerShape(10.dp))
-    ) else this
+    if (selected) this.border(1.5.dp, color, RoundedCornerShape(10.dp)) else this
