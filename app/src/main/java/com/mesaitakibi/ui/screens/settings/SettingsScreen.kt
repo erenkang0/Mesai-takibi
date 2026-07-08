@@ -15,9 +15,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Backup
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.BeachAccess
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
@@ -85,6 +87,8 @@ fun SettingsScreen(
         }
 
         SectionCard(title = "Yönetim") {
+            NavRow("Analiz & Grafikler", Icons.Filled.BarChart) { onNavigate(Routes.REPORTS) }
+            NavRow("Takvim (Puantaj)", Icons.Filled.DateRange) { onNavigate(Routes.CALENDAR) }
             NavRow("Vardiya / Plan", Icons.Filled.Schedule) { onNavigate(Routes.SHIFTS) }
             NavRow("Vergi ve SGK Parametreleri", Icons.Filled.Receipt) { onNavigate(Routes.TAX) }
             NavRow("Kıdem & İhbar Tazminatı", Icons.Filled.Calculate) { onNavigate(Routes.SEVERANCE) }

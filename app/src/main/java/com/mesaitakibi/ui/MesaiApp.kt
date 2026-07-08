@@ -24,12 +24,14 @@ import com.mesaitakibi.ui.navigation.BottomTab
 import com.mesaitakibi.ui.navigation.Routes
 import com.mesaitakibi.ui.notification.rememberNotificationPermissionRequester
 import com.mesaitakibi.ui.screens.backup.BackupScreen
+import com.mesaitakibi.ui.screens.calendar.CalendarScreen
 import com.mesaitakibi.ui.screens.dashboard.DashboardScreen
 import com.mesaitakibi.ui.screens.finance.FinanceScreen
 import com.mesaitakibi.ui.screens.holidays.HolidaysScreen
 import com.mesaitakibi.ui.screens.leave.LeaveScreen
 import com.mesaitakibi.ui.screens.onboarding.OnboardingScreen
 import com.mesaitakibi.ui.screens.payroll.PayrollScreen
+import com.mesaitakibi.ui.screens.reports.ReportsScreen
 import com.mesaitakibi.ui.screens.settings.SettingsScreen
 import com.mesaitakibi.ui.screens.severance.SeveranceScreen
 import com.mesaitakibi.ui.screens.shift.ShiftScreen
@@ -115,6 +117,8 @@ private fun MainScaffold() {
             composable(Routes.BACKUP) { BackupScreen(onBack = { navController.popBackStack() }) }
             composable(Routes.SEVERANCE) { SeveranceScreen(onBack = { navController.popBackStack() }) }
             composable(Routes.LEAVE) { LeaveScreen(onBack = { navController.popBackStack() }) }
+            composable(Routes.REPORTS) { ReportsScreen(onBack = { navController.popBackStack() }) }
+            composable(Routes.CALENDAR) { CalendarScreen(onBack = { navController.popBackStack() }) }
         }
     }
 }

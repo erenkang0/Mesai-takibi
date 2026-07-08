@@ -21,6 +21,8 @@ object Routes {
     const val BACKUP = "backup"
     const val SEVERANCE = "severance"
     const val LEAVE = "leave"
+    const val REPORTS = "reports"
+    const val CALENDAR = "calendar"
 }
 
 /** Alt gezinme çubuğundaki sekmeler. */
