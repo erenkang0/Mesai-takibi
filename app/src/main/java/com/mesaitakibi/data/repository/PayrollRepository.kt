@@ -1,7 +1,10 @@
 package com.mesaitakibi.data.repository
 
+import com.mesaitakibi.data.local.dao.PayrollAdjustmentDao
 import com.mesaitakibi.data.local.dao.PayrollPeriodDao
+import com.mesaitakibi.data.local.entity.PayrollAdjustmentEntity
 import com.mesaitakibi.data.local.entity.PayrollPeriodEntity
+import kotlinx.coroutines.flow.Flow
 import com.mesaitakibi.domain.overtime.WeeklyWorkResult
 import com.mesaitakibi.domain.payroll.MonthlyWork
 import com.mesaitakibi.domain.payroll.PayrollCalculator
@@ -18,12 +21,20 @@ import javax.inject.Singleton
 @Singleton
 class PayrollRepository @Inject constructor(
     private val payrollDao: PayrollPeriodDao,
+    private val adjustmentDao: PayrollAdjustmentDao,
     private val timeTracking: TimeTrackingRepository,
     private val settingsRepo: SettingsRepository,
     private val taxRepo: TaxRepository,
     private val calculator: PayrollCalculator
 ) {
     fun observeAll(): Flow<List<PayrollPeriodEntity>> = payrollDao.observeAll()
+
+    fun observeAdjustments(year: Int, month: Int): Flow<List<PayrollAdjustmentEntity>> =
+        adjustmentDao.observeForMonth(year, month)
+
+    suspend fun addAdjustment(adjustment: PayrollAdjustmentEntity) { adjustmentDao.insert(adjustment) }
+
+    suspend fun deleteAdjustment(adjustment: PayrollAdjustmentEntity) = adjustmentDao.delete(adjustment)
 
     suspend fun getSaved(year: Int, month: Int): PayrollPeriodEntity? =
         payrollDao.getById(year * 100 + month)
@@ -67,7 +78,17 @@ class PayrollRepository @Inject constructor(
             holidayHours = minutesToHours(holidayMin),
             nightHours = minutesToHours(nightMin)
         )
-        return calculator.calculate(work, profile, tax)
+
+        val adjustments = adjustmentDao.getForMonth(year, month)
+        fun sumOf(kind: String) = adjustments.filter { it.kind == kind }
+            .fold(BigDecimal.ZERO) { acc, a -> acc + BigDecimal(a.amount) }
+
+        return calculator.calculate(
+            work, profile, tax,
+            additionalTaxableEarnings = sumOf(PayrollAdjustmentEntity.EARNING_TAXABLE),
+            netAdditions = sumOf(PayrollAdjustmentEntity.EARNING_NET),
+            netDeductions = sumOf(PayrollAdjustmentEntity.DEDUCTION_NET)
+        )
     }
 
     suspend fun computeAndSave(year: Int, month: Int): PayrollResult {
